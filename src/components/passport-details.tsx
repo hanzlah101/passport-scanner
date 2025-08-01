@@ -1,10 +1,16 @@
 "use client"
 
 import { useMemo } from "react"
-import { FileTextIcon, HashIcon } from "lucide-react"
+import { FileTextIcon, HashIcon, RefreshCcwIcon } from "lucide-react"
 import { getMrzFieldIcon } from "@/lib/icons"
 import { formatMrzFieldValue } from "@/lib/formatters"
+import { Button } from "@/components/ui/button"
 import { type PassportInfo } from "@/types"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
 import {
   Card,
   CardAction,
@@ -14,7 +20,17 @@ import {
   CardTitle
 } from "@/components/ui/card"
 
-export function PassportDetails({ details, mzn }: PassportInfo) {
+type PassportDetailProps = PassportInfo & {
+  onReset: () => void
+  onRetry: () => void
+}
+
+export function PassportDetails({
+  details,
+  mzn,
+  onReset,
+  onRetry
+}: PassportDetailProps) {
   const formattedFields = useMemo(() => {
     return details.map((detail) => ({
       label: detail.label,
@@ -31,7 +47,25 @@ export function PassportDetails({ details, mzn }: PassportInfo) {
           <FileTextIcon className="text-primary size-5" />
           Passport Information
         </CardTitle>
-        <CardAction className="flex items-center gap-2"></CardAction>
+        <CardAction className="flex items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={onRetry}
+                className="size-8"
+              >
+                <RefreshCcwIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Retry OCR</TooltipContent>
+          </Tooltip>
+
+          <Button variant="secondary" size="sm" onClick={onReset}>
+            Upload New
+          </Button>
+        </CardAction>
       </CardHeader>
 
       <CardContent>
