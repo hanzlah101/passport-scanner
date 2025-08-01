@@ -1,6 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 import { UploadIcon } from "lucide-react"
 import { motion } from "motion/react"
 import { useDropzone } from "react-dropzone"
@@ -26,18 +27,30 @@ export const UploadDropzone = ({ onChange }: UploadDropzoneProps) => {
       const img = new Image()
 
       img.onload = async () => {
-        Object.assign(file, {
+        const extendedFile = Object.assign(file, {
           preview: objectUrl,
           width: img.width,
           height: img.height
         })
-        await onChange(file as unknown as ExtendedFile)
+        await onChange(extendedFile)
+        URL.revokeObjectURL(objectUrl)
+      }
+
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl)
       }
 
       img.src = objectUrl
     },
     onDropRejected: (error) => {
-      console.log(error)
+      const rejection = error[0]
+      if (rejection?.errors[0]?.code === "file-too-large") {
+        toast.error(
+          `File too large. Maximum size is ${MAX_IMAGE_SIZE / 1024 / 1024}MB`
+        )
+      } else {
+        toast.error("Invalid file. Please upload an image file.")
+      }
     }
   })
 

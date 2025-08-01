@@ -56,7 +56,7 @@ export default function Home() {
           onReset={reset}
         />
       ) : (
-        <PassportDetails {...data} />
+        <PassportDetails onReset={reset} onRetry={retry} {...data} />
       )}
     </main>
   )
