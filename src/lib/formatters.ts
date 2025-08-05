@@ -59,6 +59,12 @@ const PRIORITY_FIELDS: Record<string, number> = {
   expirationDate: 6
 }
 
+function formatName(name?: string) {
+  if (!name) return ""
+  const parts = name.split(/\s{2,}/)
+  return parts[0]?.trim() || name
+}
+
 export function processPassportDetails(details: Details[]) {
   const validDetails = details
     .filter((d) => !!d?.field && !!d?.value?.trim())
@@ -77,6 +83,7 @@ export function processPassportDetails(details: Details[]) {
 
   if (firstName || lastName) {
     const fullNameValue = [firstName?.value, lastName?.value]
+      .map(formatName)
       .filter(Boolean)
       .join(" ")
       .trim()
