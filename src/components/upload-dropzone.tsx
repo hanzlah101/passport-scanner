@@ -33,7 +33,6 @@ export const UploadDropzone = ({ onChange }: UploadDropzoneProps) => {
           height: img.height
         })
         await onChange(extendedFile)
-        URL.revokeObjectURL(objectUrl)
       }
 
       img.onerror = () => {

@@ -185,7 +185,8 @@ export const useMRZParser = () => {
           setLoading({ status: "idle", progress: null })
         }, 500)
       }
-    } catch {
+    } catch (error) {
+      console.error("Error parsing image:", error)
       setError("Unexpected error occurred.")
     } finally {
       setLoading((prev) =>
